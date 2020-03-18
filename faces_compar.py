@@ -84,11 +84,14 @@ if __name__ == '__main__':
                 'q', ]
 
         home       =  os.path.dirname(__file__)
+        dbname     =  None
         path_to_db =  None
         src        =  None
         saveto     =  None
         _show      =  False
         control    =  None
+        dataname   =  None
+        idd        =  0
         conf       =  90.0
         
         print(' '*10, '='*40, 'Interacnive console', '='*40)
@@ -210,6 +213,17 @@ if __name__ == '__main__':
                 src = None
                 _show = False
                 conf = 90.0
+            
+            elif command == 'create':
+                count = 0
+                req = ''
+                text_list = ['enter name db', 'input path to db', 'input src', 'input idd']
+                var_dict = {'dbname':None, 'ptdb':None, 'src':None, 'dataname':None, 'idd':'0'}
+                while True:
+                    req = input(text_list[count])
+                    
+                
+                dbh.create_new_db(args.dbname, args.path_to_db, args.src, args.dataname, idd)
                 
             elif command == 'video':
                 print('Режим video пока не доступен')
