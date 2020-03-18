@@ -200,7 +200,7 @@ def camera_scaner(path_to_db = None, cascade = args.home+'/'+'haarcascade_fronta
     label = ''
     names = dbh.get_list_names(path_to_db)
     num = 0
-    cap = cv2.VideoCapture(-1)
+    cap = cv2.VideoCapture(0)
     #cap.set(cv2.CAP_PROP_FPS, 10)
     cv2.namedWindow('video')
     while True:

@@ -9,6 +9,8 @@ import os.path
 class GetArgs:
     def __init__(self):
         home_script = os.path.dirname(__file__)
+        print(home_script)
+        print('Cacade: ', os.path.exists(home_script+'\\'+'haarcascade_frontalface_default.xml'))
         # создание родительского парсера
         pars = argparse.ArgumentParser(description='Image comparaison script', epilog='Подразумевается,\
                                                     что файл с каскадом лежит в той же директорие, что\
@@ -131,6 +133,7 @@ class GetArgs:
         
         
         args = pars.parse_args()
+        print(args)
         self.home = home_script
         self.command = args.command
         self.path_to_db = args.db
