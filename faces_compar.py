@@ -13,10 +13,10 @@ import DatabaseHelper as dbh
 if __name__ == '__main__':
     # получение данных из командной строки
     args = gvars.GetArgs()
-    print()
     # выбор режима выполнения
     command = args.command
-    
+    if command == None:
+        args.get_help()
     # режим камеры
     if command == 'camera':
         scaner_face.camera_scaner(args.path_to_db, args.cascade)
@@ -216,14 +216,37 @@ if __name__ == '__main__':
             
             elif command == 'create':
                 count = 0
-                req = ''
-                text_list = ['enter name db', 'input path to db', 'input src', 'input idd']
-                var_dict = {'dbname':None, 'ptdb':None, 'src':None, 'dataname':None, 'idd':'0'}
                 while True:
-                    req = input(text_list[count])
-                    
-                
-                dbh.create_new_db(args.dbname, args.path_to_db, args.src, args.dataname, idd)
+                    if count == 3:
+                        print('Исчерпан лимит запросов.')
+                        sys.exit(-1)
+                    if dbname == None:
+                        dbname = input('Имя базы: ')
+                    if path_to_db == None:
+                        path_to_db = input('Полный путь к БД: ')
+                        if not os.path.exists(path_to_db):
+                            count += 1
+                            path_to_db == None
+                            print('Не верно указан путь или база не существует.')
+                            continue
+                    if src == None:
+                        src = input('Полный путь к изображениям: ')
+                        if not os.path.exists(src):
+                            count += 1
+                            src == None
+                            print('Не верно указан путь.')
+                            continue
+                    if dataname == None:
+                        dataname = input('Имя данных: ')
+                    if idd == 0:
+                        try:
+                            idd = float(input('Порог точности: '))
+                        except:
+                            idd = 0
+                            print('Не корректный воод...')
+                            continue
+                if dataname != None and dbname != None and path_to_db != None and src != None and idd > 0:
+                    dbh.create_new_db(dbname, path_to_db, src, dataname, idd)
                 
             elif command == 'video':
                 print('Режим video пока не доступен')
