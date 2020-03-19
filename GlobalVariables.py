@@ -5,45 +5,71 @@ import sys
 import os.path
 
 
-
-class GetArgs:
+help_text = '''
+        Ошибка! Запуск без первого обязательного аргумента...
+        
+  Первый обязательный аргумент определяет режим выполнения программы.
+   Список аргументов:
+     1.camera - поиск лиц с камеры
+     2.video  - поиск лиц в видеофайле
+     3.all    - поиск всех лиц в с изображениями
+     4.person - поиск определенного лица в папке  с изображениями
+     5.create - создание БД из подготовленных данных
+     6.add    - добавление подготовленных данных в базу
+     7.train  - обучение БД
+     8.remove - удаление определенных данных из базы
+     9.rename - переименовывание файлов в заданный формат
+            '''
+class GetArgs(argparse.ArgumentParser):
     def __init__(self):
         home_script = os.path.dirname(__file__)
         # создание родительского парсера
-        pars = argparse.ArgumentParser(description='Image comparaison script', epilog='Подразумевается,\
+        super(GetArgs, self).__init__()
+        self.pars = argparse.ArgumentParser(description='Image comparaison script', epilog='Подразумевается,\
                                                     что файл с каскадом лежит в той же директорие, что\
                                                     и весь код, иначе надо указывать полный путь к каскаду.')
-        pars.set_defaults(command='', db='', cascade='', src='',
-                             saveto='', _show=0, ctrl='', conf=0.0, dataname='',
-                             dbname='', idd=0)
+        self.pars.set_defaults(command=None, db=None, 
+                               cascade=None, src=None,
+                               saveto=None, _show=0, 
+                               ctrl=None, conf=90.0, 
+                               dataname=None,
+                               dbname=None, idd=0 )
         
         
         # создание субпарсера
-        sub = pars.add_subparsers(help='Команды задающие режим выполнения.\
-                                        Являются первым обязательным аргументом.', title='Commands')
+        sub = self.pars.add_subparsers(help='Команды задающие режим выполнения.\
+                                        Являются первым обязательным аргументом.',
+                                                                  title='Commands')
+        
         
         # режим интерактивной консоли
-        console = sub.add_parser('console', help='Режим интерактивной консоли', description='Режим \
-                                                            интерактивной консоли.')
-        console.set_defaults(command='console', db='', cascade='', src='',
-                             saveto='', _show=0, ctrl='', conf=0.0, dataname='',
-                             dbname='', idd=0)
+        console = sub.add_parser('console', help = 'Режим интерактивной консоли', 
+                                     description = 'Режим интерактивной консоли.' )
+        console.set_defaults(command='console', db=None, 
+                             cascade=None, src=None,
+                             saveto=None, _show=0, 
+                             ctrl=None, conf=90.0, 
+                             dataname=None,
+                             dbname=None, idd=0 )
         
         # режим вебкамеры
-        camera = sub.add_parser('camera', help='Режим поиска с камеры', description='Режим поиска с камеры.')
+        camera = sub.add_parser('camera', help='Режим поиска с камеры',
+                                  description='Режим поиска с камеры.'  )
         camera.set_defaults(command='camera')
         camera.add_argument('db', type=str, help='Полный путь к базе данных.')
-        camera.add_argument('-c', dest='cascade', type=str, default=home_script+'/haarcascade_frontalface_default.xml',
-                                                   help='Полный путь к файлу каскада, если он\
-                                                         находится в другой директории.')
+        camera.add_argument('-c', dest='cascade', type=str, 
+                                  default=home_script+'/haarcascade_frontalface_default.xml',
+                                                 help='Полный путь к файлу каскада, если он\
+                                                       находится в другой директории.' )
         
         # режим видеофайла
         video = sub.add_parser('video', help='Режим поиска в видеофайле.')
         video.set_defaults(command='video')
         video.add_argument('db', type=str, help='Полный путь к базе данных.')
-        video.add_argument('-c', dest='cascade', type=str, default=home_script+'/haarcascade_frontalface_default.xml',
-                                                   help='Полный путь к файлу каскада, если он\
-                                                         находится в другой директории.')
+        video.add_argument('-c', dest='cascade', type=str, 
+                           default=home_script+'/haarcascade_frontalface_default.xml',
+                           help = 'Полный путь к файлу каскада, если он\
+                                        находится в другой директории.'  )
         video.add_argument('--src', dest='src', type=str, help='Полный путь к видеофайлу.')
         
         # режим поиска всех лиц
@@ -130,21 +156,22 @@ class GetArgs:
         
         
         
-        args = pars.parse_args()
-        self.home = home_script
-        self.command = args.command
-        self.path_to_db = args.db
-        self.cascade = args.cascade
-        self.src = args.src
-        self.saveto = args.saveto
-        self._show = args._show
-        self.control = args.ctrl
-        self.conf = args.conf
-        self.dataname = args.dataname
-        self.dbname = args.dbname
-        self.idd = args.idd
+        self.args       =  self.pars.parse_args()
+        self.home       =  home_script
+        self.command    =  self.args.command
+        self.path_to_db =  self.args.db
+        self.cascade    =  self.args.cascade
+        self.src        =  self.args.src
+        self.saveto     =  self.args.saveto
+        self._show      =  self.args._show
+        self.control    =  self.args.ctrl
+        self.conf       =  self.args.conf
+        self.dataname   =  self.args.dataname
+        self.dbname     =  self.args.dbname
+        self.idd        =  self.args.idd
 
-
+    def get_help(self):
+        print(help_text)
 
 
 
